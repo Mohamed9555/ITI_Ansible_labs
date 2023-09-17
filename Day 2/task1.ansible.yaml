@@ -1,0 +1,17 @@
+- name: update web servers
+  gather_facts: true
+  hosts: web-servers
+  tasks:
+    - name: updating pkm and updateing nginx to latest 
+      apt: 
+        update_cache: true
+        name: nginx
+        state: latest
+    - name: copy index.html from host to target 
+      copy:
+        src: ./index.html
+        dest: /var/www/html/index.html
+    - name: restart nginx
+      sysvinit:
+        name: nginx
+        state: restarted

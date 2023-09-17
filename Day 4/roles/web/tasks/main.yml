@@ -1,0 +1,16 @@
+- name: install packages using loop
+  apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  notify: copy_files_handler
+  changed_when: true
+
+- name: html_template
+  template: 
+    src: index.html.j2
+    dest: /var/www/html/index.html
+  notify: restart_service
+  
+
+
+  

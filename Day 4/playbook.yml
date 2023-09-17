@@ -1,0 +1,10 @@
+- name: installing packages
+  gather_facts: false
+  hosts: web-servers
+  roles: 
+    - web
+ 
+
+    
+  
+      

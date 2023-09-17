@@ -1,0 +1,40 @@
+- name: install package 
+  gather_facts: true
+  hosts: web-servers
+  vars:
+    package_name: nginx
+    package_state: latest
+    file_names:
+      - ./file.css
+      - ./file.js
+    message: "DevOps"
+     
+  tasks:
+    - name: install package
+      apt:
+        name: "{{ package_name }}"
+        state: "{{ package_state }}"
+      notify: copy_files_handler
+      changed_when: true
+    
+    - name: flush
+      meta: flush_handlers
+    
+    - name: html_template
+      template: 
+        src: ./index.html.j2
+        dest: /var/www/html/index.html
+      notify: restart_service
+   
+
+  handlers:
+    - name: copy_files_handler 
+      copy:
+        src: "{{ item }}"
+        dest: /var/www/html/
+      loop: "{{ file_names }}"
+
+    - name: restart_service
+      sysvinit:
+        name: "{{ package_name }}"
+        state: restarted

@@ -1,0 +1,13 @@
+- name: update web servers
+  gather_facts: false
+  hosts: web-servers
+  vars:
+    package_name: nginx
+    package_version: latest
+  tasks:
+    - name: install nginx
+      tags: 
+        - install
+      apt:
+        name: "{{ package_name }}"
+        state: "{{ package_version }}"

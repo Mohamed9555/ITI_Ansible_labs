@@ -1,0 +1,14 @@
+- name: copy_files_handler 
+  copy:
+    src: "{{ item }}"
+    dest: /var/www/html/
+  loop: "{{ file_names }}"
+  
+- name: restart_service
+  sysvinit:
+    name: "{{ package_name }}"
+    state: restarted
+
+
+
+       

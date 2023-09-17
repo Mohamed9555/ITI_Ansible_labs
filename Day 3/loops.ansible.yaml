@@ -1,0 +1,17 @@
+- name: installing packages
+  gather_facts: false
+  hosts: web-servers
+  vars:
+    packages:
+      - { package_name: "nginx", package_state: "latest"}
+      - { package_name: "curl", package_state: "present"}
+      - { package_name: "vim", package_state: "absent"}
+
+  tasks:
+    - name: install packages using loop
+      apt:
+        name: "{{ item.package_name }}"
+        state: "{{ item.package_state }}"
+      loop: "{{ packages }}"
+       
+      

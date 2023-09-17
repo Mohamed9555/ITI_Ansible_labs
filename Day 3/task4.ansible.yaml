@@ -1,0 +1,32 @@
+- name: install package 
+  gather_facts: true
+  hosts: web-servers
+  vars:
+    package_name: nginx
+    package_state: latest
+    file_names:
+      - ./index.html
+      - ./file.css
+      - ./file.js
+     
+  tasks:
+    - name: install package
+      apt:
+        name: "{{ package_name }}"
+        state: "{{ package_state }}"
+      notify: copy_files_handler
+      changed_when: true
+   
+
+  handlers:
+    - name: copy_files_handler 
+      copy:
+        src: "{{ item }}"
+        dest: /var/www/html/
+      loop: "{{ file_names }}"
+      notify: restart_service
+
+    - name: restart_service
+      sysvinit:
+        name: "{{ package_name }}"
+        state: restarted

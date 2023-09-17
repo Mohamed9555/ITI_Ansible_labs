@@ -1,0 +1,8 @@
+packages_name: nginx
+package_state: latest
+
+file_names:
+      - file1.css
+      - file1.js
+
+message: "DevOps"

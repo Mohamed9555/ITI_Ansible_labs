@@ -1,0 +1,36 @@
+---
+- name: Installing and Restarting Web Servers
+  hosts: web-servers
+  gather_facts: true
+
+  tasks:
+    - name: Install Nginx on Ubuntu or httpd on CentOS
+      apt:
+        name: "{{ 'nginx' if ansible_facts['distribution'] == 'Ubuntu' else 'httpd' }}"
+        state: latest
+      register: result
+
+    - name: Restart Nginx on Ubuntu
+      sysvinit:
+        name: nginx
+        state: restarted
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Restart httpd on CentOS
+      sysvinit:
+        name: httpd
+        state: restarted
+      when: ansible_facts['distribution'] == "CentOS"
+
+
+    - name: Print return information from the installation task
+      debug:
+        msg: "{{ result }}"
+
+
+    - name: Restart Service if the installation task was changed
+      sysvinit:
+        name: "{{ 'nginx' if ansible_facts['distribution'] == 'Ubuntu' else 'httpd' }}"
+        state: restarted
+      when: result.changed == true
+      
